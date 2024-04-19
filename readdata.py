@@ -1,6 +1,8 @@
 import cv2
 import os
-
+from  preprocessing import preprocess_image
+from modeltraining import lpq
+import joblib
 def read_data(folder_path):
     image_list = []
     count=0
@@ -15,8 +17,14 @@ def read_data(folder_path):
                 image_list.append(image)
     return image_list
 
-# folder_path = "fonts-dataset\IBM Plex Sans Arabic"
-# images = read_images(folder_path)
-# print("Number of images found:", len(images))
+folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project"
+image_list = read_data(folder_path)
+clf = joblib.load('training2.pkl')
 
-
+for image in image_list:
+    image=preprocess_image(image)
+    image=cv2.resize(image,(32,32))
+    feature=lpq(image)
+    feature_2d = feature.reshape(1, -1)
+    result = clf.predict(feature_2d)
+    print (result)

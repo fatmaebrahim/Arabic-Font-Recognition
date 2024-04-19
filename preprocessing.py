@@ -56,7 +56,11 @@ def unblur_image(image):
     return image
 
 
-
+def preprocess_image(image):
+    noise_removed=salt_paper(image)
+    binary=text_binary(noise_removed)
+    rotated=text_rotation(binary)
+    return rotated
 
 def preprocess(data):
     # image = cv2.imread(r"fonts-dataset\Marhey\2.jpeg", cv2.IMREAD_GRAYSCALE)
