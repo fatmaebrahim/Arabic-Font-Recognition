@@ -19,7 +19,7 @@ def read_data(folder_path):
 
 folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project"
 image_list = read_data(folder_path)
-clf = joblib.load('training2.pkl')
+clf = joblib.load('training4_500_3_winsize.pkl')
 
 for image in image_list:
     image=preprocess_image(image)
@@ -27,4 +27,5 @@ for image in image_list:
     feature=lpq(image)
     feature_2d = feature.reshape(1, -1)
     result = clf.predict(feature_2d)
+    
     print (result)

@@ -8,7 +8,7 @@ import cv2
 import joblib
 from preprocessing import preprocess_image
     
-def lpq(img,winSize=5):
+def lpq(img,winSize=3):
 
     #using nh mode
     
@@ -54,7 +54,7 @@ def lpq(img,winSize=5):
 clf = svm.SVC()
 training_data=[]
 training_labels=[]
-Number_of_images=100
+Number_of_images=500
 def IBM_font_training():
     for root, dirs, files in os.walk(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\NN_dataset\fonts-dataset\IBMPlexSansArabic"):
         i=0
@@ -119,11 +119,11 @@ def Scheherazade_New_font_training():
    
 
 
-#training data for different fonts
+# #training data for different fonts
 # IBM_font_training()
 # Lemonada_font_training()
 # Marhey_font_training()
 # Scheherazade_New_font_training()
 # clf.fit(training_data, training_labels)
 
-# joblib.dump(clf, 'training2.pkl')
+# joblib.dump(clf, 'training4_500_3_winsize.pkl')
