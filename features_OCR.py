@@ -181,15 +181,16 @@ def getListOfFiles(dirName):
 def main():
     data=np.array([])
     classes=np.array([])
-    directory=r'F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\training_set\IBM'
+    directory=r'F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\archive\Dataset'
     chars=get_immediate_subdirectories(directory)
+    print(chars)
     count=0
     numOfFeatures=16
     charPositions=['Beginning','End','Isolated','Middle']
     for char in chars:
         for position in charPositions:
-            if(os.path.isdir(directory+'/'+char+'/'+position)==True):
-                listOfFiles = getListOfFiles(directory+'/'+char+'/'+position)
+            if(os.path.isdir(directory+'/'+char)==True):
+                listOfFiles = getListOfFiles(directory+'/'+char)
                 for filename in listOfFiles:
                     img = cv.imread(filename)
                     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)

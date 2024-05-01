@@ -7,7 +7,14 @@ import os
 import cv2 
 import joblib
 from preprocessing import preprocess_image
-    
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import make_classification
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn.metrics import accuracy_score
+  
 def lpq(img,winSize=3):
 
     #using nh mode
@@ -51,7 +58,7 @@ def lpq(img,winSize=3):
     return LPQdesc
 
 # Create an SVM classifier
-clf = svm.SVC()
+# clf = svm.SVC()
 training_data=[]
 training_labels=[]
 Number_of_images=500
@@ -124,6 +131,17 @@ def Scheherazade_New_font_training():
 # Lemonada_font_training()
 # Marhey_font_training()
 # Scheherazade_New_font_training()
-# clf.fit(training_data, training_labels)
+# # Initialize the classifiers
+# knn_clf = KNeighborsClassifier()
+# svm_clf = SVC(probability=True)
+# rf_clf = RandomForestClassifier()
 
-# joblib.dump(clf, 'training4_500_3_winsize.pkl')
+# # Create a voting classifier
+# voting_clf = VotingClassifier(
+#     estimators=[('knn', knn_clf), ('svm', svm_clf), ('rf', rf_clf)],
+#     voting='soft'  # Use 'soft' voting to get probabilities
+# )
+  
+# voting_clf.fit(training_data, training_labels)
+
+# joblib.dump(voting_clf, 'voting.pkl')

@@ -17,9 +17,9 @@ def read_data(folder_path):
                 image_list.append(image)
     return image_list
 
-folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project"
+folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\testing\2"
 image_list = read_data(folder_path)
-clf = joblib.load('training4_500_3_winsize.pkl')
+clf = joblib.load('voting.pkl')
 
 for image in image_list:
     image=preprocess_image(image)
