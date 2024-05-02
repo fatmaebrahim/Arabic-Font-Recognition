@@ -13,3 +13,9 @@
 8/20 IBM
 7/20 Marhey
 18/20 Lemonda
+
+## randomForest.pkl  training using LPQ with training 500 and random forest classifier
+12/20 ScheherazadeNew
+5/20 IBM
+10/20 Marhey
+18/20 Lemonda

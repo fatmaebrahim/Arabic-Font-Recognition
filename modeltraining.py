@@ -137,11 +137,11 @@ def Scheherazade_New_font_training():
 # rf_clf = RandomForestClassifier()
 
 # # Create a voting classifier
-# voting_clf = VotingClassifier(
-#     estimators=[('knn', knn_clf), ('svm', svm_clf), ('rf', rf_clf)],
-#     voting='soft'  # Use 'soft' voting to get probabilities
-# )
+# # voting_clf = VotingClassifier(
+# #     estimators=[('knn', knn_clf), ('svm', svm_clf), ('rf', rf_clf)],
+# #     voting='soft'  # Use 'soft' voting to get probabilities
+# # )
   
-# voting_clf.fit(training_data, training_labels)
+# rf_clf.fit(training_data, training_labels)
 
-# joblib.dump(voting_clf, 'voting.pkl')
+# joblib.dump(rf_clf, 'randomForest.pkl')
