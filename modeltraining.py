@@ -6,7 +6,7 @@ import numpy as np
 import os
 import cv2 
 import joblib
-from preprocessing import preprocess_image
+from preprocessing import preprocess
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_classification
 from sklearn.neighbors import KNeighborsClassifier
@@ -144,23 +144,54 @@ def Scheherazade_New_font_training():
                 training_labels.append(0)
    
 
+def train_data(data, testdata):
+    print("///////////////data0")
+    print(data[0])
+    print("///////////////X_Train1")
+    print(data[1])
+    print("///////////////X_Train2")
+    print(data[2])
+    print("///////////////X_Train3")
+    print(data[3])
+    X_train = np.array([d[:-1] for d in data]).reshape(-1, 1)
+    y_train = np.array([int(d[-1]) for d in data])
+    print("///////////////X_Train0")
+    print(X_train[0])
+    print("///////////////X_Train1")
+    print(X_train[1])
+    print("///////////////X_Train2")
+    print(X_train[2])
+    print("///////////////X_Train3")
+    print(X_train[3])
+    print("///////////////Train")
+    print(y_train)
+    # Initialize Random Forest Classifier with default settings
+    random_forest = RandomForestClassifier()
+    
+    # Train the model
+    random_forest.fit(X_train, y_train)
+    joblib.dump(random_forest, 'Haar_angles_LPQ.pkl')
+    test_data(testdata)
 
-# #training data for different fonts
-# IBM_font_training()
-# Lemonada_font_training()
-# Marhey_font_training()
-# Scheherazade_New_font_training()
-# # Initialize the classifiers
-# knn_clf = KNeighborsClassifier()
-# svm_clf = SVC(probability=True)
-# rf_clf = RandomForestClassifier()
+    
+def test_data( testdata):
+    random_forest=joblib.load('Haar_angles_LPQ.pkl')
+    
+    X_test = np.array([d[0] for d in testdata]).reshape(-1, 1)
+    y_test = np.array([int(d[-1]) for d in testdata])
+    print("///////////////Real")
+    print(y_test)
+    print("///////////////predict")
 
-# # Create a voting classifier
-# # voting_clf = VotingClassifier(
-# #     estimators=[('knn', knn_clf), ('svm', svm_clf), ('rf', rf_clf)],
-# #     voting='soft'  # Use 'soft' voting to get probabilities
-# # )
-  
-# # print(training_data)
-# rf_clf.fit(np.array(training_data), training_labels)
-# joblib.dump(rf_clf, 'Haar_LPQ.pkl')
+    # Make predictions
+    y_pred = random_forest.predict(X_test)
+    print(y_pred)
+
+    # Count the correct predictions
+    num_correct = np.sum(y_pred == y_test)
+    
+    # Calculate accuracy
+    accuracy_percentage = (num_correct / len(y_test)) * 100
+    print("Accuracy (%):", accuracy_percentage)
+
+    return accuracy_percentage

@@ -7,8 +7,10 @@
 # Salt and pepper noise
 import numpy as np
 import cv2
+import csv
 from skimage.feature import canny
 from skimage.filters import sobel
+import math
 
 def salt_paper(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -50,24 +52,38 @@ def text_rotation(image):
     height, width = image.shape[:2]
     rotation_matrix = cv2.getRotationMatrix2D((width / 2, height / 2), median_angle, 1)
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
+    rotated_image = cv2.resize(rotated_image, (width*2, height*2))
+
+   
+
+   
     return rotated_image
 
 def unblur_image(image):
     return image
 
 
-def preprocess_image(image):
-    noise_removed=salt_paper(image)
-    binary=text_binary(noise_removed)
-    rotated=text_rotation(binary)
-    return rotated
-
 def preprocess(data):
-    # image = cv2.imread(r"fonts-dataset\Marhey\2.jpeg", cv2.IMREAD_GRAYSCALE)
+    preprocessed_data=[]
+    for image in data:
+        noise_removed=salt_paper(image)
+        binary=text_binary(noise_removed)
+        rotated=text_rotation( binary)
+        preprocessed_data.append(rotated)
+        # cv2.imshow("Image", rotated)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+ 
+        
+        
+    return preprocessed_data
+    
+    # image = cv2.imread(r"fonts-dataset\IBM Plex Sans Arabic\994.jpeg")
+ 
     # sharpened_image = unblur_image(image)
     # noise_removed=salt_paper( sharpened_image)
     # binary=text_binary(noise_removed)
-    # rotated=text_rotation(binary)
+    
     # cv2.imshow("Image", sharpened_image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
@@ -77,21 +93,13 @@ def preprocess(data):
     # cv2.imshow("Image", rotated)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    for image in data:
-        noise_removed=salt_paper(image)
-        binary=text_binary(noise_removed)
-        rotated=text_rotation(binary)
-        cv2.imshow("Image", rotated)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-    
-    
-
-
-
-
-
-
-
-
+    # for image in data:
+    #     noise_removed=salt_paper(image)
+    #     binary=text_binary(noise_removed)
+    #     rotated=text_rotation(binary)
+    #     cv2.imshow("Image", image)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
+    #     cv2.imshow("Image", rotated)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()

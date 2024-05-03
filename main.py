@@ -9,25 +9,29 @@ import modeltraining
 
 data=[]
 anglefeature=[]
-data.append( readdata.read_data("fonts-dataset\IBM Plex Sans Arabic",500))
-data.append( readdata.read_data("fonts-dataset\Lemonada",500))
-data.append( readdata.read_data("fonts-dataset\Marhey",500))
-data.append( readdata.read_data("fonts-dataset\Scheherazade New",500))
+NumberOftrainingData=1
+data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\IBMPlexSansArabic",NumberOftrainingData))
+data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\Lemonada",NumberOftrainingData))
+data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\Marhey",NumberOftrainingData))
+data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\ScheherazadeNew",NumberOftrainingData))
 
 for i in range(len(data)):
     preprocessed_data = preprocessing.preprocess(data[i])
-    features.detect_lines(i,  preprocessed_data , anglefeature)
+    features.feature_extraction(i,  preprocessed_data , anglefeature)
+
+print(anglefeature)
 
 
 
 test=[]
-test.append( readdata.read_data("fonts-dataset\ibm",20))
-test.append( readdata.read_data("fonts-dataset\lem",20))
-test.append( readdata.read_data("fonts-dataset\mar",20))
-test.append( readdata.read_data("fonts-dataset\sha",20))
+NumoftestData=1
+test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\ibm",NumoftestData))
+test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\lem",NumoftestData))
+test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\mar",NumoftestData))
+test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\sha",NumoftestData))
 testdata=[]
 for i in range(len(test)):
     preprocessed_data = preprocessing.preprocess(test[i])
-    features.detect_lines(i,  preprocessed_data ,testdata)
+    features.feature_extraction(i,  preprocessed_data ,testdata)
 
-predicted_labels = modeltraining.classify_data(anglefeature,testdata)
+predicted_labels = modeltraining.train_data(anglefeature,testdata)
