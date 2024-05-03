@@ -19,3 +19,9 @@
 5/20 IBM
 10/20 Marhey
 18/20 Lemonda
+
+## Haar_LPQ.pkl training using LPQ and Haar with training 500 and random forest classifier
+ScheherazadeNew:10/20
+IBM:8/20
+Marhey:9/20
+Lemonda:19/20

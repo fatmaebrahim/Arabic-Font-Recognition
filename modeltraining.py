@@ -14,6 +14,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.metrics import accuracy_score
+import pywt
+
   
 def lpq(img,winSize=3):
 
@@ -67,14 +69,19 @@ def IBM_font_training():
         i=0
         for file in files:
             if file.endswith('.jpeg') and i < Number_of_images:
+                features=[]
                 i=i+1
                 path = os.path.join(root, file)
                 print(path)
                 image = cv2.imread(path)
                 preprocessed_image = preprocess_image(image)
                 image=cv2.resize(preprocessed_image,(32,32))
-                feature=lpq(image)
-                training_data.append(feature)
+                coeffs = pywt.dwt2(image, 'haar') 
+                cA, (cH, cV, cD) = coeffs
+                feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
+                feature_lpq=lpq(image)
+                features = np.concatenate((feature_haar, feature_lpq))
+                training_data.append(np.array(features))
                 training_labels.append(3)
    
 def Lemonada_font_training():
@@ -88,8 +95,12 @@ def Lemonada_font_training():
                 image = cv2.imread(path)
                 preprocessed_image = preprocess_image(image)
                 image=cv2.resize(preprocessed_image,(32,32))
-                feature=lpq(image)
-                training_data.append(feature)
+                coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
+                cA, (cH, cV, cD) = coeffs
+                feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
+                feature_lpq=lpq(image)
+                features = np.concatenate((feature_haar, feature_lpq))
+                training_data.append(np.array(features))
                 training_labels.append(2)
    
 
@@ -104,8 +115,12 @@ def Marhey_font_training():
                 image = cv2.imread(path)
                 preprocessed_image = preprocess_image(image)
                 image=cv2.resize(preprocessed_image,(32,32))
-                feature=lpq(image)
-                training_data.append(feature)
+                coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
+                cA, (cH, cV, cD) = coeffs
+                feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
+                feature_lpq=lpq(image)
+                features = np.concatenate((feature_haar, feature_lpq))
+                training_data.append(np.array(features))
                 training_labels.append(1)
    
 
@@ -120,8 +135,12 @@ def Scheherazade_New_font_training():
                 image = cv2.imread(path)
                 preprocessed_image = preprocess_image(image)
                 image=cv2.resize(preprocessed_image,(32,32))
-                feature=lpq(image)
-                training_data.append(feature)
+                coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
+                cA, (cH, cV, cD) = coeffs
+                feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
+                feature_lpq=lpq(image)
+                features = np.concatenate((feature_haar, feature_lpq))
+                training_data.append(np.array(features))
                 training_labels.append(0)
    
 
@@ -142,6 +161,6 @@ def Scheherazade_New_font_training():
 # #     voting='soft'  # Use 'soft' voting to get probabilities
 # # )
   
-# rf_clf.fit(training_data, training_labels)
-
-# joblib.dump(rf_clf, 'randomForest.pkl')
+# # print(training_data)
+# rf_clf.fit(np.array(training_data), training_labels)
+# joblib.dump(rf_clf, 'Haar_LPQ.pkl')
