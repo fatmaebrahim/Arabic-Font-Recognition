@@ -85,12 +85,10 @@ def feature_extraction(font, images,data,labels):
         coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
         cA, (cH, cV, cD) = coeffs
         feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
-        print("////////////////////////feature_haar")
-        print(feature_haar)
+        
         image=cv2.resize(image,(32,32))
         feature_lpq=lpq(image)
-        print("////////////////////////feature_lpq")
-        print(feature_lpq)
+        
         
         if feature_angles is None:
             features=np.concatenate((feature_lpq, feature_haar,np.array([0.0])))
@@ -98,5 +96,6 @@ def feature_extraction(font, images,data,labels):
             features=np.concatenate((feature_lpq, feature_haar,np.array([feature_angles])))
         data.append(features)
         labels.append(font)
-        print("////////////////////////data in feature_extraction")
-        print(data)
+        print("////////////////////labels")
+        print(labels)
+    

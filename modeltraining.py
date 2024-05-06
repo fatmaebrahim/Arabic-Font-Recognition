@@ -144,7 +144,7 @@ def Scheherazade_New_font_training():
                 training_labels.append(0)
    
 
-def train_data(data, testdata,labels):
+def train_data(data,labels):
     # print("///////////////data0")
     # print(data[0])
     # print("///////////////X_Train1")
