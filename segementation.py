@@ -82,22 +82,22 @@ def preprocess(image):
 
     # Maybe we end up using only gray level image.
     gray_img = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-    gray_img = cv.bitwise_not(gray_img)
+    # gray_img = cv.bitwise_not(gray_img)
 
     binary_img = binary_otsus(gray_img, 0)
     # cv.imwrite('origin.png', gray_img)
 
-    # deskewed_img = deskew(binary_img)
     deskewed_img = deskew(binary_img)
+    # deskewed_img = deskew(binary_img)
     # cv.imwrite('output.png', deskewed_img)
 
-    # binary_img = binary_otsus(deskewed_img, 0)
+    binary_img = binary_otsus(deskewed_img, 0)
     # breakpoint()
 
     # Visualize
 
     # breakpoint()
-    return deskewed_img
+    return binary_img
 
 
 def projection_segmentation(clean_img, axis, cut=3):
@@ -117,7 +117,12 @@ def projection_segmentation(clean_img, axis, cut=3):
             cnt += 1
             if cnt >= cut:
                 if axis == 'horizontal':
-                    segments.append(clean_img[max(start-1, 0):idx, :])
+                    line_img = clean_img[max(start-1, 0):idx, :]
+                    # print(line_img.shape[0])
+                    # print("///////////////////////////")
+                    # Check if the line is too thin (e.g., a dot) and merge it with the previous line if needed
+                    if line_img.shape[0] > 15:
+                        segments.append(line_img)
                 elif axis == 'vertical':
                     segments.append(clean_img[:, max(start-1, 0):idx])
                 cnt = 0
@@ -126,28 +131,31 @@ def projection_segmentation(clean_img, axis, cut=3):
     return segments
 
 
+
 # Line Segmentation
 #----------------------------------------------------------------------------------------
 def line_horizontal_projection(image, line_height=50, cut=3):
     # Preprocess input image
-    clean_img = preprocess(image)
-
+    clean_img = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    cv2.imshow('Line', clean_img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     # Segmentation
     lines = projection_segmentation(clean_img, axis='horizontal', cut=cut)
 
     # Resize lines to a fixed height
-    resized_lines = [cv2.resize(line, (line.shape[1], line_height)) for line in lines]
+    # resized_lines = [cv2.resize(line, (line.shape[1], line_height)) for line in lines]
 
 
-    for line in resized_lines:
+    for line in lines:
         cv2.imshow('Line', line)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    return resized_lines
+    return lines
 
 
 
 if __name__ == "__main__":
-    img = cv.imread(r'F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\IBMPlexSansArabic\41.jpeg')
+    img = cv.imread(r'F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\testing\0\953.jpeg')
     line_horizontal_projection(img)

@@ -175,11 +175,11 @@ def train_data(data,labels):
     
     # Train the model
     random_forest.fit(X_train, y_train)
-    joblib.dump(random_forest, 'Haar_angles_LPQ.pkl')
+    joblib.dump(random_forest, 'LPQ_angles_Segmentation_modified.pkl')
 
     
 def test_data( testdata,labels):
-    random_forest=joblib.load('Haar_angles_LPQ.pkl')
+    random_forest=joblib.load('LPQ_angles_Segmentation_modified.pkl')
     
     X_test = testdata
     y_test = labels

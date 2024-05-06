@@ -68,11 +68,11 @@ def preprocess(data):
     for image in data:
         noise_removed=salt_paper(image)
         binary=text_binary(noise_removed)
-        rotated=text_rotation( binary)
-        preprocessed_data.append(rotated)
-        # cv2.imshow("Image", rotated)
+        # rotated=text_rotation( binary)
+        # cv2.imshow("Image", binary)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
+        preprocessed_data.append(binary)
  
         
         
