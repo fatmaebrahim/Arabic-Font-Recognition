@@ -9,7 +9,8 @@ import modeltraining
 
 data=[]
 anglefeature=[]
-NumberOftrainingData=1
+labels=[]
+NumberOftrainingData=20
 data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\IBMPlexSansArabic",NumberOftrainingData))
 data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\Lemonada",NumberOftrainingData))
 data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\Marhey",NumberOftrainingData))
@@ -17,14 +18,15 @@ data.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural
 
 for i in range(len(data)):
     preprocessed_data = preprocessing.preprocess(data[i])
-    features.feature_extraction(i,  preprocessed_data , anglefeature)
-
+    features.feature_extraction(i,  preprocessed_data , anglefeature,labels)
+print("////////////////////////////////////////////////Angle Features")
 print(anglefeature)
 
 
 
 test=[]
 NumoftestData=1
+labels=[]
 test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\ibm",NumoftestData))
 test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\lem",NumoftestData))
 test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset\mar",NumoftestData))
@@ -32,6 +34,7 @@ test.append( readdata.read_data(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural
 testdata=[]
 for i in range(len(test)):
     preprocessed_data = preprocessing.preprocess(test[i])
-    features.feature_extraction(i,  preprocessed_data ,testdata)
+    features.feature_extraction(i,  preprocessed_data ,testdata,labels)
 
-predicted_labels = modeltraining.train_data(anglefeature,testdata)
+predicted_labels = modeltraining.train_data(anglefeature,testdata,labels)
+modeltraining.test_data(testdata,labels)

@@ -133,7 +133,7 @@ def Scheherazade_New_font_training():
                 path = os.path.join(root, file)
                 print(path)
                 image = cv2.imread(path)
-                preprocessed_image = preprocess_image(image)
+                preprocessed_image = preprocess(image)
                 image=cv2.resize(preprocessed_image,(32,32))
                 coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
                 cA, (cH, cV, cD) = coeffs
@@ -144,41 +144,45 @@ def Scheherazade_New_font_training():
                 training_labels.append(0)
    
 
-def train_data(data, testdata):
-    print("///////////////data0")
-    print(data[0])
-    print("///////////////X_Train1")
-    print(data[1])
-    print("///////////////X_Train2")
-    print(data[2])
-    print("///////////////X_Train3")
-    print(data[3])
-    X_train = np.array([d[:-1] for d in data]).reshape(-1, 1)
-    y_train = np.array([int(d[-1]) for d in data])
-    print("///////////////X_Train0")
-    print(X_train[0])
-    print("///////////////X_Train1")
-    print(X_train[1])
-    print("///////////////X_Train2")
-    print(X_train[2])
-    print("///////////////X_Train3")
-    print(X_train[3])
-    print("///////////////Train")
-    print(y_train)
+def train_data(data, testdata,labels):
+    # print("///////////////data0")
+    # print(data[0])
+    # print("///////////////X_Train1")
+    # print(data[1])
+    # print("///////////////X_Train2")
+    # print(data[2])
+    # print("///////////////X_Train3")
+    # print(data[3])
+    X_train = data
+    y_train = labels
+    print("////////////////////data length")
+    print(len(X_train))
+    print("////////////////////labels length")
+    print(len(y_train))
+    
+    # print("///////////////X_Train0")
+    # print(X_train[0])
+    # print("///////////////X_Train1")
+    # print(X_train[1])
+    # print("///////////////X_Train2")
+    # print(X_train[2])
+    # print("///////////////X_Train3")
+    # print(X_train[3])
+    # print("///////////////Train")
+    # print(y_train)
     # Initialize Random Forest Classifier with default settings
     random_forest = RandomForestClassifier()
     
     # Train the model
     random_forest.fit(X_train, y_train)
     joblib.dump(random_forest, 'Haar_angles_LPQ.pkl')
-    test_data(testdata)
 
     
-def test_data( testdata):
+def test_data( testdata,labels):
     random_forest=joblib.load('Haar_angles_LPQ.pkl')
     
-    X_test = np.array([d[0] for d in testdata]).reshape(-1, 1)
-    y_test = np.array([int(d[-1]) for d in testdata])
+    X_test = testdata
+    y_test = labels
     print("///////////////Real")
     print(y_test)
     print("///////////////predict")

@@ -47,7 +47,7 @@ def lpq(img,winSize=3):
     #print(LPQdesc)
     return LPQdesc
 
-def feature_extraction(font, images,data):
+def feature_extraction(font, images,data,labels):
     threshold=20
     min_line_length=20
     max_line_gap=10
@@ -82,7 +82,7 @@ def feature_extraction(font, images,data):
             if degrees!=[]:
                 feature_angles=np.mean(degrees)
                 # print([np.mean(degrees),font])
-        coeffs = pywt.dwt2(image, 'haar') 
+        coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
         cA, (cH, cV, cD) = coeffs
         feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
         print("////////////////////////feature_haar")
@@ -93,9 +93,10 @@ def feature_extraction(font, images,data):
         print(feature_lpq)
         
         if feature_angles is None:
-            features=np.concatenate((feature_haar, feature_lpq,np.array([0.0]),np.array([font])))
+            features=np.concatenate((feature_lpq, feature_haar,np.array([0.0])))
         else:
-            features=np.concatenate((feature_haar, feature_lpq,np.array([feature_angles]),np.array([font])))
+            features=np.concatenate((feature_lpq, feature_haar,np.array([feature_angles])))
         data.append(features)
+        labels.append(font)
         print("////////////////////////data in feature_extraction")
         print(data)
