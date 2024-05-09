@@ -1,12 +1,7 @@
 import cv2
 import os
-from  preprocessing import preprocess
-from modeltraining import lpq
-import joblib
-import pywt
-import numpy as np
-def read_data(folder_path,count):
-    image_list = []
+
+def read_data(folder_path,count,font, data,labels):
     for filename in os.listdir(folder_path):
         if count==0:
             break
@@ -15,9 +10,9 @@ def read_data(folder_path,count):
             image_path = os.path.join(folder_path, filename)
             image = cv2.imread(image_path)
             if image is not None:
-                image_list.append(image)
+                data.append(image)
+                labels.append(font)
 
-    return image_list
 
 
 # folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\testing\3"

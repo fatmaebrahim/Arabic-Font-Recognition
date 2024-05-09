@@ -52,7 +52,7 @@ def text_rotation(image):
     height, width = image.shape[:2]
     rotation_matrix = cv2.getRotationMatrix2D((width / 2, height / 2), median_angle, 1)
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
-    rotated_image = cv2.resize(rotated_image, (width*2, height*2))
+    # rotated_image = cv2.resize(rotated_image, (width*2, height*2))
 
    
 
@@ -68,14 +68,12 @@ def preprocess(data):
     for image in data:
         noise_removed=salt_paper(image)
         binary=text_binary(noise_removed)
-        # rotated=text_rotation( binary)
+        rotated=text_rotation( binary)
         # cv2.imshow("Image", binary)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
-        preprocessed_data.append(binary)
+        preprocessed_data.append(rotated)
  
-        
-        
     return preprocessed_data
     
     # image = cv2.imread(r"fonts-dataset\IBM Plex Sans Arabic\994.jpeg")
