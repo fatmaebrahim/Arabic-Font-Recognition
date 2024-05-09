@@ -1,20 +1,20 @@
-# from sklearn.model_selection import train_test_split
-# from sklearn.linear_model import LinearRegression  # Example model, replace with actual models
-# from scipy.signal import convolve2d
-# from sklearn import svm ,metrics
-# import numpy as np
-# import os
-# import cv2 
-# import joblib
-# from preprocessing import preprocess
-# from sklearn.model_selection import train_test_split
-# from sklearn.datasets import make_classification
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.svm import SVC
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.ensemble import VotingClassifier
-# from sklearn.metrics import accuracy_score
-# # import pywt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression  # Example model, replace with actual models
+from scipy.signal import convolve2d
+from sklearn import svm ,metrics
+import numpy as np
+import os
+import cv2 
+import joblib
+from preprocessing import preprocess
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import make_classification
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn.metrics import accuracy_score
+# import pywt
 
   
 # def lpq(img,winSize=3):
@@ -207,27 +207,28 @@ from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 
 def classify_data(data, datalabels, test, testlabels):
-    if len(data) >= 2:
-        X_train=data
-        y_train=datalabels
-        X_test=test
-        y_test=testlabels
-        random_forest = RandomForestClassifier()
-        
-        random_forest.fit(X_train, y_train)
-        y_pred = random_forest.predict(X_test)
-        # print("ytrain: ",y_train)
-        print("ytest: ",y_test)
-        print("ypred: ",y_pred.tolist())
-        
-        # num_correct = np.sum(y_pred == y_test)
-        # accuracy_percentage = (num_correct / len(y_test)) * 100
-        # print("Accuracy (%):", accuracy_percentage)
-        
-        majority_class = np.bincount(y_pred).argmax()  
-        print("the majority of lines vote for: ",majority_class,"the number of lines",len(y_pred))
-        return majority_class
-    else:
-        print("not enough data points")
-        return None
+   
+    X_train=data
+    y_train=datalabels
+    
+    random_forest = RandomForestClassifier()
+    
+    random_forest.fit(X_train, y_train)
+    joblib.dump(random_forest, 'LPQ_angles_Segmentation_modified.pkl')
 
+
+    majority=test_data(test, testlabels)
+    return majority
+
+
+def test_data(test, testlabels):
+    X_test=test
+    y_test=testlabels
+    random_forest=joblib.load('LPQ_angles_Segmentation_modified.pkl')
+    y_pred = random_forest.predict(X_test)
+    print("ytest: ",y_test)
+    print("ypred: ",y_pred.tolist())      
+    
+    majority_class = np.bincount(y_pred).argmax()  
+    print("the majority of lines vote for: ",majority_class,"the number of lines",len(y_pred))
+    return majority_class

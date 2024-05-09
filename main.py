@@ -7,11 +7,12 @@ import numpy as np
 
 data=[]
 labels=[]
-NumberOftrainingData=50
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\IBM Plex Sans Arabic",NumberOftrainingData,0,data,labels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\Lemonada",NumberOftrainingData,1, data,labels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\Marhey",NumberOftrainingData,2,data,labels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\Scheherazade New",NumberOftrainingData,3, data,labels)
+NumberOftrainingData=1
+training_path_folder=r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\training_set"
+readdata.read_data(training_path_folder+r"\IBM",NumberOftrainingData,3,data,labels)
+readdata.read_data(training_path_folder+r"\Lemonda",NumberOftrainingData,2, data,labels)
+readdata.read_data(training_path_folder+r"\Marhey",NumberOftrainingData,1,data,labels)
+readdata.read_data(training_path_folder+r"\ScheherazadeNew",NumberOftrainingData,0, data,labels)
 preprocessed_data = preprocessing.preprocess(data)
 imagefeatures=[]
 linelabels=[]
@@ -20,11 +21,12 @@ for j in range(len(preprocessed_data)):
 
 test=[]
 testlabels=[]
-NumoftestData=10
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\ibm",NumoftestData,0,test,testlabels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\lem",NumoftestData,1,test,testlabels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\mar",NumoftestData,2,test,testlabels)
-readdata.read_data(r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset\sha",NumoftestData,3,test,testlabels)
+NumoftestData=1
+test_path_folder=r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\testing"
+readdata.read_data(test_path_folder+r"\0",NumoftestData,0,test,testlabels)
+readdata.read_data(test_path_folder+r"\1",NumoftestData,1,test,testlabels)
+readdata.read_data(test_path_folder+r"\2",NumoftestData,2,test,testlabels)
+readdata.read_data(test_path_folder+r"\3" ,NumoftestData,3,test,testlabels)
 preprocessed_test=preprocessing.preprocess(test)
 allcorrect=[]
 allpredicted=[]

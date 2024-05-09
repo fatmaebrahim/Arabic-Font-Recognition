@@ -130,13 +130,13 @@ def represent_image_with_bow(image_descriptor, kmeans_model):
 
     return histogram
 
-def sift(image):
-    image_descriptors = extract_sift_features(image)
-    kmeans_model = build_bow_model(image_descriptors)
+# def sift(image):
+#     image_descriptors = extract_sift_features(image)
+#     kmeans_model = build_bow_model(image_descriptors)
    
-    image_histogram = represent_image_with_bow(image_descriptors, kmeans_model)
-    return image_histogram
-    # print("Image feature vector:", image_histogram)
+#     image_histogram = represent_image_with_bow(image_descriptors, kmeans_model)
+#     return image_histogram
+#     # print("Image feature vector:", image_histogram)
 
 
 def feature_extraction(font, whole_image,data,labels):
@@ -184,11 +184,11 @@ def feature_extraction(font, whole_image,data,labels):
         image=cv2.resize(image,(32,32))
         feature_lpq=lpq(image)
         
-        feature_sift=sift(whole_image)
+        # feature_sift=sift(whole_image)
         if feature_angles is None:
-            features=np.concatenate((feature_lpq,feature_sift,np.array([80.0])))
+            features=np.concatenate((feature_lpq,np.array([80.0])))
         else:
-            features=np.concatenate((feature_lpq,feature_sift,np.array([feature_angles])))
+            features=np.concatenate((feature_lpq,np.array([feature_angles])))
         data.append(features)
         labels.append(font)
 
