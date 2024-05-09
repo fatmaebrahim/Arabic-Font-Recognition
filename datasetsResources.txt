@@ -1,2 +1,0 @@
-Arabic letters
-https://www.kaggle.com/datasets/mahmoudreda55/arabic-letters-numbers-ocr
