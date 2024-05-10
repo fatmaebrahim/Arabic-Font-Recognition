@@ -60,3 +60,12 @@ Lemonda:19/20
  3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
  3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 3 3 3 3]
 ### Accuracy (%): 85.25641025641025
+## LPQ_angle_Segmentation.pkl with 700 training and 20 test using LPQ and angels
+without IBM 91.666%
+### Accuracy (%): 76.25
+
+## test.pkl with just LPQ feature with 200 training and 10 test 
+### Accurace : 95% 
+
+## LPQ_Proper_angles.pkl with LPQ and angles with 200 training and 10 test 
+### Accurace : 97.5% 

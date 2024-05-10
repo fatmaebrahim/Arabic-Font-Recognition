@@ -113,7 +113,7 @@ def extract_sift_features(image):
     descriptors = descriptors
     return descriptors
 
-def build_bow_model(image_descriptors, num_clusters=100):
+def build_bow_model(image_descriptors, num_clusters=13):
     kmeans = KMeans(n_clusters=num_clusters)
     kmeans.fit(image_descriptors)
     visual_words = kmeans.cluster_centers_
@@ -130,13 +130,14 @@ def represent_image_with_bow(image_descriptor, kmeans_model):
 
     return histogram
 
-# def sift(image):
-#     image_descriptors = extract_sift_features(image)
-#     kmeans_model = build_bow_model(image_descriptors)
+def sift(image):
+    image_resized=image.resize((100, 100))
+    image_descriptors = extract_sift_features(image_resized)
+    kmeans_model = build_bow_model(image_descriptors)
    
-#     image_histogram = represent_image_with_bow(image_descriptors, kmeans_model)
-#     return image_histogram
-#     # print("Image feature vector:", image_histogram)
+    image_histogram = represent_image_with_bow(image_descriptors, kmeans_model)
+    return image_histogram
+    # print("Image feature vector:", image_histogram)
 
 
 def feature_extraction(font, whole_image,data,labels):
@@ -181,10 +182,12 @@ def feature_extraction(font, whole_image,data,labels):
         # cA, (cH, cV, cD) = coeffs
         # feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
         
-        image=cv2.resize(image,(32,32))
+        # image=cv2.resize(image,(128,128))
         feature_lpq=lpq(image)
         
-        # feature_sift=sift(whole_image)
+        # feature_sift=sift(image)
+        # print(feature_angles)
+        # print()
         if feature_angles is None:
             features=np.concatenate((feature_lpq,np.array([80.0])))
         else:

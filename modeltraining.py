@@ -214,17 +214,14 @@ def classify_data(data, datalabels, test, testlabels):
     random_forest = RandomForestClassifier()
     
     random_forest.fit(X_train, y_train)
-    joblib.dump(random_forest, 'LPQ_angles_Segmentation_modified.pkl')
+    joblib.dump(random_forest, 'LPQ_Proper_angles.pkl')
 
-
-    majority=test_data(test, testlabels)
-    return majority
 
 
 def test_data(test, testlabels):
     X_test=test
     y_test=testlabels
-    random_forest=joblib.load('LPQ_angles_Segmentation_modified.pkl')
+    random_forest=joblib.load('LPQ_Proper_angles.pkl')
     y_pred = random_forest.predict(X_test)
     print("ytest: ",y_test)
     print("ypred: ",y_pred.tolist())      
