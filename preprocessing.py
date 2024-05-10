@@ -70,6 +70,41 @@ def text_binary(image, filter:int=1):
 
     return binary_img
 
+def adaptive_line_segmentation(preprocessed_img, segment_size=100):
+    histogram = np.sum(preprocessed_img, axis=1)
+    n_segments = len(histogram) // segment_size
+    thresholds = []
+    
+    # Compute local thresholds
+    for i in range(n_segments + 1):
+        start = i * segment_size
+        end = min((i + 1) * segment_size, len(histogram))
+        local_hist = histogram[start:end]
+        if len(local_hist) > 0:
+            local_min = np.min(local_hist)
+            thresholds.append(local_min)
+        else:
+            thresholds.append(np.inf)
+
+    global_threshold = np.max(thresholds)  # Using mean of local minima as global threshold
+    
+    zero_crossings = np.where(histogram <= global_threshold)[0]
+    start_row = 0
+    lines = []
+
+    for row in zero_crossings:
+        if row - start_row > 10:  # Minimum line height
+            line = preprocessed_img[start_row:row, :]
+            lines.append(line)
+        start_row = row
+
+    return lines
+
+def needs_reversal(line):
+    # get baseline with the more white pixels
+    baselinePos =  np.argmax(np.sum(line, axis=1))
+    return baselinePos <= len(line) / 2
+
 
 
 def text_rotation(image):
@@ -90,8 +125,27 @@ def text_rotation(image):
     rotation_matrix = cv2.getRotationMatrix2D((width / 2, height / 2), median_angle, 1)
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
     # rotated_image = cv2.resize(rotated_image, (width*2, height*2))
+    
+    # for reversal lines if needed
+    lines = adaptive_line_segmentation(rotated_image)
+    # for line in lines:
+    #     cv2.imshow("line", line)
+    #     cv2.waitKey(0)
+    needRotation = False
 
-   
+    # take second line if possible
+    if(len(lines)>1):
+        needRotation = needs_reversal(lines[1])
+    elif(len(lines)==1):
+        needRotation = needs_reversal(lines[0])
+
+    print(needRotation)
+
+    height, width = rotated_image.shape[:2]
+    rotation_matrix = cv2.getRotationMatrix2D((width / 2, height / 2), 90, 1)
+    if needRotation:
+        rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
+
 
    
     return rotated_image
