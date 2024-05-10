@@ -67,5 +67,11 @@ without IBM 91.666%
 ## test.pkl with just LPQ feature with 200 training and 10 test 
 ### Accurace : 95% 
 
+
 ## LPQ_Proper_angles.pkl with LPQ and angles with 200 training and 10 test 
-### Accurace : 97.5% 
+### Accurace : 97.5%
+but with test =20
+### Accurace : 98.75%
+
+## Evil_test.pkl with LPQ and angles with 700 training and 50 test 
+### Accurace : 88.5%
