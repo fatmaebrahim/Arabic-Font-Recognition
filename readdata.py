@@ -1,17 +1,14 @@
 import cv2
 import os
 
-def read_data(folder_path,count,font, data,labels):
-    for filename in os.listdir(folder_path):
-        if count==0:
-            break
-        count-=1
-        if filename.endswith((".jpeg")):  
-            image_path = os.path.join(folder_path, filename)
-            image = cv2.imread(image_path)
-            if image is not None:
-                data.append(image)
-                labels.append(font)
+def read_data(folder_path, count,start, font, data, labels):
+    for i in range(count):
+        filename = f"{start+i}.jpeg"
+        image_path = os.path.join(folder_path, filename)
+        image = cv2.imread(image_path)
+        if image is not None:
+            data.append(image)
+            labels.append(font)
 
 
 

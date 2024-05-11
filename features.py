@@ -1,10 +1,9 @@
 import numpy as np
 import cv2
-import csv
 import math
 from scipy.signal import convolve2d
 from sklearn.cluster import KMeans
-# import pywt
+
 def projection(gray_img, axis:str='horizontal'):
     """ Compute the horizontal or the vertical projection of a gray image """
 
@@ -34,9 +33,6 @@ def projection_segmentation(clean_img, axis, cut=3):
             if cnt >= cut:
                 if axis == 'horizontal':
                     line_img = clean_img[max(start-1, 0):idx, :]
-                    # print(line_img.shape[0])
-                    # print("///////////////////////////")
-                    # Check if the line is too thin (e.g., a dot) and merge it with the previous line if needed
                     if line_img.shape[0] > 15:
                         segments.append(line_img)
                 elif axis == 'vertical':
@@ -47,26 +43,13 @@ def projection_segmentation(clean_img, axis, cut=3):
     return segments
 
 def line_horizontal_projection(image, line_height=50, cut=3):
-    # Preprocess input image
     clean_img = image
-
-    # Segmentation
     lines = projection_segmentation(clean_img, axis='horizontal', cut=cut)
-
-    # Resize lines to a fixed height
     resized_lines = [cv2.resize(line, (line.shape[1], line_height)) for line in lines]
-
-
-    # for line in resized_lines:
-    #     cv2.imshow('Line', line)
-    #     cv2.waitKey(0)
-    #     cv2.destroyAllWindows()
-
     return lines
+
 def lpq(img,winSize=3):
 
-    #using nh mode
-    
     STFTalpha=1/winSize  # alpha in STFT approaches (for Gaussian derivative alpha=1)
     convmode='valid' # Compute descriptor responses only on part that have full neigborhood. Use 'same' if all pixels are included (extrapolates np.image with zeros).
 
@@ -79,30 +62,19 @@ def lpq(img,winSize=3):
     w1=np.exp(-2*np.pi*x*STFTalpha*1j)
     w2=np.conj(w1)
 
-    ## Run filters to compute the frequency response in the four points. Store np.real and np.imaginary parts separately
-    # Run first filter
     filterResp1=convolve2d(convolve2d(img,w0.T,convmode),w1,convmode)
     filterResp2=convolve2d(convolve2d(img,w1.T,convmode),w0,convmode)
     filterResp3=convolve2d(convolve2d(img,w1.T,convmode),w1,convmode)
     filterResp4=convolve2d(convolve2d(img,w1.T,convmode),w2,convmode)
-
-    # Initilize frequency domain matrix for four frequency coordinates (np.real and np.imaginary parts for each frequency).
     freqResp=np.dstack([filterResp1.real, filterResp1.imag,
                         filterResp2.real, filterResp2.imag,
                         filterResp3.real, filterResp3.imag,
                         filterResp4.real, filterResp4.imag])
 
-    ## Perform quantization and compute LPQ codewords
     inds = np.arange(freqResp.shape[2])[np.newaxis,np.newaxis,:]
     LPQdesc=((freqResp>0)*(2**inds)).sum(2)
-
-    ## Histogram if needed
     LPQdesc=np.histogram(LPQdesc.flatten(),range(256))[0]
-
-    ## Normalize histogram if needed
     LPQdesc=LPQdesc/LPQdesc.sum()
-
-    #print(LPQdesc)
     return LPQdesc
 
 
@@ -140,6 +112,35 @@ def sift(image):
     # print("Image feature vector:", image_histogram)
 
 
+def adaptive_line_segmentation(preprocessed_img, segment_size=100):
+    histogram = np.sum(preprocessed_img, axis=1)
+    n_segments = len(histogram) // segment_size
+    thresholds = []
+    for i in range(n_segments + 1):
+        start = i * segment_size
+        end = min((i + 1) * segment_size, len(histogram))
+        local_hist = histogram[start:end]
+        if len(local_hist) > 0:
+            local_min = np.min(local_hist)
+            thresholds.append(local_min)
+        else:
+            thresholds.append(np.inf)
+
+    global_threshold = np.max(thresholds)  
+    
+    zero_crossings = np.where(histogram <= global_threshold)[0]
+    start_row = 0
+    lines = []
+
+    for row in zero_crossings:
+        if row - start_row > 10:  
+            line = preprocessed_img[start_row:row, :]
+            lines.append(line)
+        start_row = row
+
+    return lines
+
+
 def feature_extraction(font, whole_image,data,labels):
     threshold=20
     min_line_length=20
@@ -147,7 +148,8 @@ def feature_extraction(font, whole_image,data,labels):
     # cv2.imshow('Line', whole_image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    lines_image=line_horizontal_projection(whole_image)
+    # lines_image=line_horizontal_projection(whole_image)
+    lines_image=adaptive_line_segmentation(whole_image)
     for image in lines_image:
         # cv2.imshow('Line', image)
         # cv2.waitKey(0)
@@ -170,26 +172,16 @@ def feature_extraction(font, whole_image,data,labels):
                     angle_deg = math.degrees(angle_rad)  
                     if np.abs(angle_deg) > 75 and np.abs(y1 - y2) >max_diff-50:
                         degrees.append(np.abs(angle_deg))
-                        # cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            # cv2.imshow("Image", image)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
            
             if degrees!=[]:
                 feature_angles=np.mean(degrees)
-                # print([np.mean(degrees),font])
-        # coeffs = pywt.dwt2(image, 'haar')  # Using Haar wavelet as an example
-        # cA, (cH, cV, cD) = coeffs
-        # feature_haar = np.concatenate((cA.flatten(), cH.flatten(), cV.flatten(), cD.flatten()))
-        
-        # image=cv2.resize(image,(128,128))
         feature_lpq=lpq(image)
         
         # feature_sift=sift(image)
         # print(feature_angles)
         # print()
         if feature_angles is None:
-            features=np.concatenate((feature_lpq,np.array([80.0])))
+            features=np.concatenate((feature_lpq,np.array([0.0])))
         else:
             features=np.concatenate((feature_lpq,np.array([feature_angles])))
         data.append(features)
