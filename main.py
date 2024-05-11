@@ -78,27 +78,26 @@ testlabels=[]
 teststart=0
 NumoftestData=50
 
-def ReadTestData():
-    
+def ReadTestData(): 
     readdata.read_all_data(data_paths[0],NumoftestData,3,test,testlabels)
     readdata.read_all_data(data_paths[1],NumoftestData,2,test,testlabels)
     readdata.read_all_data(data_paths[2],NumoftestData,1,test,testlabels)
     readdata.read_all_data(data_paths[3],NumoftestData,0,test,testlabels)
 
-# image=cv2.imread(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\NN_dataset\fonts-dataset\IBMPlexSansArabic\59.jpeg")
-# print(image)
-# predicted_label=PredictionModule(image)
+image=cv2.imread(r"D:\CMP3\Second_Term\NN\fonts-dataset\IBM\64.jpeg")
+print(image)
+predicted_label=PredictionModule(image)
 # TestingModule(testlabels,test)
-# print(Compare(predicted_label,3))
-# print("Server Result")
-# print(modelbit.get_inference(
-#   workspace="eng-st-cu-edu",
-#   deployment="test_image",
-#   data=image
-# ))
+print(Compare(predicted_label,3))
+print("Server Result")
+print(modelbit.get_inference(
+  workspace="eng-st-cu-edu",
+  deployment="test_image",
+  data=image
+))
 # print(test_image([image]))
 
 
-ReadTestData()
-TestingModule(testlabels,test)
+# ReadTestData()
+# TestingModule(testlabels,test)
     
