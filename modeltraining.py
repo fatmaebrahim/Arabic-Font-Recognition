@@ -19,5 +19,5 @@ def test_data(test, testlabels):
     # print("ypred: ",y_pred.tolist())      
     
     majority_class = np.bincount(y_pred).argmax()  
-    print("the majority of lines vote for: ",majority_class)
+    # print("the majority of lines vote for: ",majority_class)
     return majority_class

@@ -84,11 +84,11 @@ def ReadTestData():
     readdata.read_all_data(data_paths[2],NumoftestData,1,test,testlabels)
     readdata.read_all_data(data_paths[3],NumoftestData,0,test,testlabels)
 
-image=cv2.imread(r"D:\CMP3\Second_Term\NN\fonts-dataset\IBM\64.jpeg")
+image=cv2.imread(r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\content\Lemonada\2.jpeg")
 print(image)
 predicted_label=PredictionModule(image)
 # TestingModule(testlabels,test)
-print(Compare(predicted_label,3))
+print(Compare(predicted_label,2))
 print("Server Result")
 print(modelbit.get_inference(
   workspace="eng-st-cu-edu",
