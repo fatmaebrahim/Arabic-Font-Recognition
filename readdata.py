@@ -10,6 +10,18 @@ def read_data(folder_path, count,start, font, data, labels):
             data.append(image)
             labels.append(font)
 
+def read_all_data(folder_path,count,font, data,labels):
+    for filename in os.listdir(folder_path):
+        if count==0:
+            break
+        count-=1
+        if filename.endswith((".jpeg")):  
+            image_path = os.path.join(folder_path, filename)
+            image = cv2.imread(image_path)
+            if image is not None:
+                data.append(image)
+                labels.append(font)
+
 
 
 # folder_path = r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\testing\3"
