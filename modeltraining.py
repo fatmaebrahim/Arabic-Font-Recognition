@@ -3,21 +3,21 @@ import joblib
 from sklearn.ensemble import RandomForestClassifier
 
 
-def classify_data(data, datalabels, test, testlabels):
+def train_data(data, datalabels):
     X_train=data
     y_train=datalabels
     random_forest = RandomForestClassifier()
     random_forest.fit(X_train, y_train)
-    joblib.dump(random_forest, 'train400test40.pkl')
+    joblib.dump(random_forest, 'test.pkl')
 
 def test_data(test, testlabels):
     X_test=test
     y_test=testlabels
-    random_forest=joblib.load('train400test40.pkl')
+    random_forest=joblib.load('test.pkl')
     y_pred = random_forest.predict(X_test)
-    print("ytest: ",y_test)
-    print("ypred: ",y_pred.tolist())      
+    # print("ytest: ",y_test)
+    # print("ypred: ",y_pred.tolist())      
     
     majority_class = np.bincount(y_pred).argmax()  
-    print("the majority of lines vote for: ",majority_class,"the number of lines",len(y_pred))
+    print("the majority of lines vote for: ",majority_class)
     return majority_class

@@ -2,62 +2,19 @@ import numpy as np
 import cv2
 import math
 from scipy.signal import convolve2d
-from sklearn.cluster import KMeans
-
-def projection(gray_img, axis:str='horizontal'):
-    """ Compute the horizontal or the vertical projection of a gray image """
-
-    if axis == 'horizontal':
-        projection_bins = np.sum(gray_img, 1).astype('int32')
-    elif axis == 'vertical':
-        projection_bins = np.sum(gray_img, 0).astype('int32')
-
-    return projection_bins
 
 
-def projection_segmentation(clean_img, axis, cut=3):
-    
-    segments = []
-    start = -1
-    cnt = 0
-
-    projection_bins = projection(clean_img, axis)
-    for idx, projection_bin in enumerate(projection_bins):
-
-        if projection_bin != 0:
-            cnt = 0
-        if projection_bin != 0 and start == -1:
-            start = idx
-        if projection_bin == 0 and start != -1:
-            cnt += 1
-            if cnt >= cut:
-                if axis == 'horizontal':
-                    line_img = clean_img[max(start-1, 0):idx, :]
-                    if line_img.shape[0] > 15:
-                        segments.append(line_img)
-                elif axis == 'vertical':
-                    segments.append(clean_img[:, max(start-1, 0):idx])
-                cnt = 0
-                start = -1
-    
-    return segments
-
-def line_horizontal_projection(image, line_height=50, cut=3):
-    clean_img = image
-    lines = projection_segmentation(clean_img, axis='horizontal', cut=cut)
-    resized_lines = [cv2.resize(line, (line.shape[1], line_height)) for line in lines]
-    return lines
 
 def lpq(img,winSize=3):
 
-    STFTalpha=1/winSize  # alpha in STFT approaches (for Gaussian derivative alpha=1)
-    convmode='valid' # Compute descriptor responses only on part that have full neigborhood. Use 'same' if all pixels are included (extrapolates np.image with zeros).
+    STFTalpha=1/winSize  
+    convmode='valid' 
 
-    img=np.float64(img) # Convert np.image to double
-    r=(winSize-1)/2 # Get radius from window size
-    x=np.arange(-r,r+1)[np.newaxis] # Form spatial coordinates in window
+    img=np.float64(img) 
+    r=(winSize-1)/2 
+    x=np.arange(-r,r+1)[np.newaxis] 
 
-    #  STFT uniform window Basic STFT filters
+   
     w0=np.ones_like(x)
     w1=np.exp(-2*np.pi*x*STFTalpha*1j)
     w2=np.conj(w1)
@@ -76,40 +33,6 @@ def lpq(img,winSize=3):
     LPQdesc=np.histogram(LPQdesc.flatten(),range(256))[0]
     LPQdesc=LPQdesc/LPQdesc.sum()
     return LPQdesc
-
-
-
-def extract_sift_features(image):
-    sift = cv2.SIFT_create()
-    keypoints, descriptors = sift.detectAndCompute(image, None)
-    descriptors = descriptors
-    return descriptors
-
-def build_bow_model(image_descriptors, num_clusters=13):
-    kmeans = KMeans(n_clusters=num_clusters)
-    kmeans.fit(image_descriptors)
-    visual_words = kmeans.cluster_centers_
-
-    return kmeans
-
-
-def represent_image_with_bow(image_descriptor, kmeans_model):
-    cluster_labels = kmeans_model.predict(image_descriptor)
-    histogram = np.zeros(kmeans_model.n_clusters)
-    for idx in cluster_labels:
-        histogram[idx] += 1
-    histogram /= np.sum(histogram)
-
-    return histogram
-
-def sift(image):
-    image_resized=image.resize((100, 100))
-    image_descriptors = extract_sift_features(image_resized)
-    kmeans_model = build_bow_model(image_descriptors)
-   
-    image_histogram = represent_image_with_bow(image_descriptors, kmeans_model)
-    return image_histogram
-    # print("Image feature vector:", image_histogram)
 
 
 def adaptive_line_segmentation(preprocessed_img, segment_size=100):
@@ -140,46 +63,39 @@ def adaptive_line_segmentation(preprocessed_img, segment_size=100):
 
     return lines
 
-
-def feature_extraction(font, whole_image,data,labels):
+def angles(image):
     threshold=20
     min_line_length=20
     max_line_gap=10
-    # cv2.imshow('Line', whole_image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    # lines_image=line_horizontal_projection(whole_image)
+    edges = cv2.Canny(image, 20, 150)
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=threshold, minLineLength=min_line_length, maxLineGap=max_line_gap)
+    max_diff = 0
+    degrees = []
+    feature_angles=None
+    if lines is not None:
+        y1_values = lines[:, 0, 1]
+        y2_values = lines[:, 0, 3]
+        absolute_diff = np.abs(y1_values - y2_values)
+        max_diff = np.max(absolute_diff)
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            if abs(x2 - x1) < abs(y2 - y1):
+                slope = (y1 - y2) / (x2 - x1 + 0.00001)
+                angle_rad = math.atan(slope)  
+                angle_deg = math.degrees(angle_rad)  
+                if np.abs(angle_deg) > 75 and np.abs(y1 - y2) >max_diff-50:
+                    degrees.append(np.abs(angle_deg))
+       
+        if degrees!=[]:
+            feature_angles=np.mean(degrees)
+        return feature_angles
+    
+def feature_extraction(font, whole_image,data,labels):
+
     lines_image=adaptive_line_segmentation(whole_image)
     for image in lines_image:
-        # cv2.imshow('Line', image)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        edges = cv2.Canny(image, 20, 150)
-        lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=threshold, minLineLength=min_line_length, maxLineGap=max_line_gap)
-        max_diff = 0
-        degrees = []
-        feature_angles=None
-        if lines is not None:
-            y1_values = lines[:, 0, 1]
-            y2_values = lines[:, 0, 3]
-            absolute_diff = np.abs(y1_values - y2_values)
-            max_diff = np.max(absolute_diff)
-            for line in lines:
-                x1, y1, x2, y2 = line[0]
-                if abs(x2 - x1) < abs(y2 - y1):
-                    slope = (y1 - y2) / (x2 - x1 + 0.00001)
-                    angle_rad = math.atan(slope)  
-                    angle_deg = math.degrees(angle_rad)  
-                    if np.abs(angle_deg) > 75 and np.abs(y1 - y2) >max_diff-50:
-                        degrees.append(np.abs(angle_deg))
-           
-            if degrees!=[]:
-                feature_angles=np.mean(degrees)
+        feature_angles=angles(image)
         feature_lpq=lpq(image)
-        
-        # feature_sift=sift(image)
-        # print(feature_angles)
-        # print()
         if feature_angles is None:
             features=np.concatenate((feature_lpq,np.array([0.0])))
         else:
