@@ -39,7 +39,7 @@ def TrainingModule():
     print("Training Time:", training_duration, "seconds")
 
 
-
+test_timing=[]
 def PredictionModule(image):
     image_list=[]
     image_list.append(image)
@@ -57,6 +57,7 @@ def PredictionModule(image):
     end_testing_time = time.time()
     testing_duration = end_testing_time - start_testing_time
     print("Testing Time:", testing_duration, "seconds")
+    test_timing.append(round(testing_duration,3))
     return predictedlabel
 def Compare(predicted_label,real_label):
     return predicted_label==real_label
@@ -67,16 +68,31 @@ def AccuracyModule(Result):
     
 def TestingModule(testlabels,test):
     Result=[]
+    Predicted_labels=[]
     for i in range(len(testlabels)):
         print("Real Label",testlabels[i])
         Predicted_label=PredictionModule(test[i])
+        Predicted_labels.append(Predicted_label)
         Result.append(Compare(Predicted_label,testlabels[i]))
+    
+    #write the list Predicted_labels in txt file
+    with open('results.txt', 'w') as file:
+    # Iterate over the list items
+        for item in Predicted_labels:
+            # Write each item to the file
+            file.write(str(item) + '\n')  # Convert item to string before concatenation
+    with open('time.txt', 'w') as file:
+    # Iterate over the list items
+        for item in test_timing:
+            # Write each item to the file
+            file.write(str(item) + '\n')  # Convert item to string before concatenation
+            
     AccuracyModule(Result)    
     
 test=[]
 testlabels=[]
 teststart=0
-NumoftestData=50
+NumoftestData=5
 
 def ReadTestData(): 
     readdata.read_all_data(data_paths[0],NumoftestData,3,test,testlabels)
