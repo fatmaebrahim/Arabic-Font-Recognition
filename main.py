@@ -2,12 +2,11 @@ import readdata
 import preprocessing
 import features
 import modeltraining
-import numpy as np
 import time
 import cv2
 # mb = modelbit.login()
 
-path_folder=r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset"
+path_folder=r"D:\Fatma\2ndTerm_3rdYear\NN\Project\fonts-dataset"
 data_paths = [
     path_folder+r"\ibm",
     path_folder+r"\lem",
@@ -74,17 +73,12 @@ def TestingModule(testlabels,test):
         Predicted_labels.append(Predicted_label)
         Result.append(Compare(Predicted_label,testlabels[i]))
     
-    #write the list Predicted_labels in txt file
     with open('results.txt', 'w') as file:
-    # Iterate over the list items
         for item in Predicted_labels:
-            # Write each item to the file
-            file.write(str(item) + '\n')  # Convert item to string before concatenation
+            file.write(str(item) + '\n')  
     with open('time.txt', 'w') as file:
-    # Iterate over the list items
         for item in test_timing:
-            # Write each item to the file
-            file.write(str(item) + '\n')  # Convert item to string before concatenation
+            file.write(str(item) + '\n')  
             
     AccuracyModule(Result)    
     
@@ -100,8 +94,6 @@ def ReadTestData():
     readdata.read_all_data(data_paths[3],NumoftestData,0,test,testlabels)
 
 
-
-
-# ReadTestData()
-# TestingModule(testlabels,test)
+ReadTestData()
+TestingModule(testlabels,test)
     

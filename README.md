@@ -55,4 +55,3 @@ To use the font recognition system, follow these steps:
 
 - Python 3.x
 - Required Python libraries: *joblib, opencv-python, scipy, numpy, scikit-learn*
-
