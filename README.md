@@ -1,8 +1,8 @@
-# Font Recognition System
+# Arabic Font Recognition System
 
 ## Overview
 
-This project is a font recognition system implemented in Python. It consists of modules for data reading, preprocessing, feature extraction, model training, testing, and accuracy evaluation. The system is designed to recognize fonts from images and provide accuracy metrics based on the trained model.
+This project is an arabic font recognition system implemented in Python. It consists of modules for data reading, preprocessing, feature extraction, model training, testing, and accuracy evaluation. The system is designed to recognize fonts from images and provide accuracy metrics based on the trained model.
 
 ## Modules
 
