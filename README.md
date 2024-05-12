@@ -54,13 +54,6 @@ To use the font recognition system, follow these steps:
 ## Requirements
 
 - Python 3.x
-- Required Python libraries: *joblib
-opencv-python
-scipy
-numpy
-scikit-learn*
+- Required Python libraries: *joblib, opencv-python, scipy, numpy, scikit-learn*
 
 
-## License
-
-*(Specify the license under which the project is released.)*
