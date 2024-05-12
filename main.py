@@ -5,7 +5,6 @@ import modeltraining
 import numpy as np
 import time
 import cv2
-import modelbit
 # mb = modelbit.login()
 
 path_folder=r"F:\LockD\CMP2025\Third_Year\Second_Term\Neural_Networks\Project\fonts-dataset"
@@ -103,6 +102,6 @@ def ReadTestData():
 
 
 
-ReadTestData()
-TestingModule(testlabels,test)
+# ReadTestData()
+# TestingModule(testlabels,test)
     
