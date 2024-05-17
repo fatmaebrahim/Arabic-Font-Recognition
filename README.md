@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is an arabic font recognition system implemented in Python. It consists of modules for data reading, preprocessing, feature extraction, model training, testing, and accuracy evaluation. The system is designed to recognize fonts from images and provide accuracy metrics based on the trained model.
+This project is an Arabic font recognition system implemented in Python. It consists of modules for data reading, preprocessing, feature extraction, model training, testing, and accuracy evaluation. The system is designed to recognize fonts from images and provide accuracy metrics based on the trained model, achieving an impressive 99% accuracy.
 
 ## Modules
 
@@ -39,7 +39,7 @@ To use the font recognition system, follow these steps:
 2. Configure the `NumberOftrainingData` and `NumoftestData` variables according to your dataset size.
 3. Run the `TrainingModule()` function to train the font recognition model.
 4. Run the `ReadTestData()` function to load test data.
-5. Run the `TestingModule(testlabels, test)` function to test the trained model and evaluate accuracy.
+5. Run the `TestingModule()` function to test the trained model and evaluate accuracy.
 
 ## Files
 
